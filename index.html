@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+  </head>
+  <body>
+    <style>
+      body {
+            padding: 0;
+            margin: 0;
+        }
+      html, body, #map {
+          height: 100%;
+          width: 100%;
+      }
+    </style>
+    <div id="map"></div>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.min.js" charset="utf-8"></script>
+    <script>
+      var map = L.map('map').setView([25.0275, 121.5251], 11);
+      L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      var routeColor = function(routeName) {
+        switch (routeName) {
+          case '信義線': 
+          case '淡水線': return "#f9000f";
+          case '木柵線': 
+          case '內湖線': return "#ce8d13";
+          case '蘆洲線': 
+          case '新莊線': 
+          case '中和線': return '#ffb600';
+          case '板橋線':
+          case '南港線': return '#006bc2';
+          case '小南門線': 
+          case '松山線':
+          case '新店線': return '#008c5a';
+          case '碧潭支線': return '#d0e300';
+          default: console.log("Couldn't Identify " + routeName); return "";
+        }
+      }
+
+      var routeStyle = function(feature) {
+        var opacity = 1;
+        if ([9,12,15].indexOf(feature.properties.OBJECTID) > -1)  opacity = 0;
+        return {'opacity':opacity,'color':routeColor(feature.properties.RouteName)}
+      }
+
+      var stationMarkerOptions = {
+          radius: 4,
+          fillColor: "white",
+          color: "#666",
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 1,
+      };
+    
+      var exitMarkerOptions = {
+          radius: 3,
+          fillColor: "yellow",
+          color: "#666",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 1,
+      };
+
+      d3.json('routes.geojson',function(d) { 
+        L.geoJson(d,{'style':routeStyle}).addTo(map);
+
+        d3.json('stations.geojson',function(d) { 
+          L.geoJson(d,{'pointToLayer':function(feature,latlng) {
+             return L.circleMarker(latlng, stationMarkerOptions);
+          }}).addTo(map);
+        });
+
+        d3.json('exits.geojson',function(d) { 
+          L.geoJson(d,{'pointToLayer':function(feature,latlng) {
+             return L.circleMarker(latlng, exitMarkerOptions);
+          }}).addTo(map);
+        });
+      });
+    </script>
+  </body>
+</html>
