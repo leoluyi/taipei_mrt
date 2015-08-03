@@ -1,0 +1,7 @@
+<OGRVRTDataSource>
+    <OGRVRTLayer name="exits">
+        <SrcDataSource>exits.csv</SrcDataSource>
+        <GeometryType>wkbPoint</GeometryType>
+        <GeometryField encoding="PointFromColumns" x="坐標X(TWD97)" y="坐標Y(TWD97)"/>
+    </OGRVRTLayer>
+</OGRVRTDataSource>
