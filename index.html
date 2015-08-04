@@ -3,6 +3,7 @@
   <head>
     <title></title>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <meta charset="utf-8">
   </head>
   <body>
     <style>
@@ -74,13 +75,15 @@
 
         d3.json('stations.geojson',function(d) { 
           L.geoJson(d,{'pointToLayer':function(feature,latlng) {
-             return L.circleMarker(latlng, stationMarkerOptions);
+              var content = feature.properties.NAME;
+             return L.circleMarker(latlng, stationMarkerOptions).bindPopup(content);
           }}).addTo(map);
         });
 
         d3.json('exits.geojson',function(d) { 
           L.geoJson(d,{'pointToLayer':function(feature,latlng) {
-             return L.circleMarker(latlng, exitMarkerOptions);
+             var content = feature.properties["出入口名稱"]
+             return L.circleMarker(latlng, exitMarkerOptions).bindPopup(content);
           }}).addTo(map);
         });
       });
