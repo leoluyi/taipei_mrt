@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OSM | Taipei MRT Exits 捷運車站出入口</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <style>
+      body {
+            padding: 0;
+            margin: 0;
+        }
+      html, body, #map {
+          height: 100%;
+          width: 100%;
+      }
+
+      .info {
+          padding: 6px 8px;
+          font: 14px/16px Arial, Helvetica, sans-serif;
+          background: white;
+          background: rgba(255,255,255,0.8);
+          box-shadow: 0 0 15px rgba(0,0,0,0.2);
+          border-radius: 5px;
+      }
+      .info h4 {
+          margin: 0 0 5px;
+          color: #777;
+      }
+      
+      .legend {
+      line-height: 18px;
+      color: #555;
+      }
+
+      .red {
+        color:red;
+      }
+      .blue {
+        color:blue;
+      }
+    </style>
+    <div id="map"></div>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.min.js" charset="utf-8"></script>
+    <script>
+      var map = L.map('map').setView([25.0675, 121.5211], 11);
+      L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      var legend = L.control({position: 'bottomright'});
+      legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML = "\
+          <h4>Subway Exits 捷運車站出入口</h4><br/>\
+          <span class='red'>red: 政府的資料 <a target='_blank' href='http://data.taipei/opendata/datalist/datasetMeta?oid=cfa4778c-62c1-497b-b704-756231de348b'>data.taipei</a></span><br/>\
+          <span class='blue'>blue: OSM railway=subway_entrance</span><br/>\
+          Github <a target='_blank' href='https://github.com/bdon/taipei_mrt'>github.com/bdon/taipei_mrt</a>";
+        return div;
+      };
+      legend.addTo(map);
+
+    
+      var exitMarkerOptions = {
+          radius: 4,
+          fillColor: "red",
+          weight: 0,
+          fillOpacity: 0.5,
+      };
+
+      var osmExitMarkerOptions = {
+          radius: 4,
+          fillColor: "blue",
+          weight: 0,
+          fillOpacity: 0.5,
+      };
+
+      d3.json('exits.geojson',function(d) { 
+        L.geoJson(d,{'pointToLayer':function(feature,latlng) {
+           var content = feature.properties["出入口名稱"]
+           return L.circleMarker(latlng, exitMarkerOptions).bindPopup(content);
+        }}).addTo(map);
+      });
+
+      d3.json('osm/osm_exits.geojson',function(d) { 
+        L.geoJson(d,{'pointToLayer':function(feature,latlng) {
+           content = "<a href='http://www.openstreetmap.org/node/"+feature.id+"' target='_blank'>Node "+feature.id+"</a>"
+           return L.circleMarker(latlng, osmExitMarkerOptions).bindPopup(content);
+        }}).addTo(map);
+      });
+    </script>
+  </body>
+</html>
+
