@@ -1,3 +1,5 @@
+![screenshot](thumbnail.png)
+
 # Taipei MRT Routes, Stations, Exits GeoJSON
 
 See index.html or [bdon.github.io/taipei_mrt/](http://bdon.github.io/taipei_mrt/) for an example of displaying and styling all 3 datasets in Leaflet. 
