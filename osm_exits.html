@@ -84,13 +84,13 @@
            var content = feature.properties["出入口名稱"]
            return L.circleMarker(latlng, exitMarkerOptions).bindPopup(content);
         }}).addTo(map);
-      });
 
-      d3.json('osm/osm_exits.geojson',function(d) { 
-        L.geoJson(d,{'pointToLayer':function(feature,latlng) {
-           content = "<a href='http://www.openstreetmap.org/node/"+feature.id+"' target='_blank'>Node "+feature.id+"</a>"
-           return L.circleMarker(latlng, osmExitMarkerOptions).bindPopup(content);
-        }}).addTo(map);
+        d3.json('osm/osm_exits.geojson',function(d) { 
+          L.geoJson(d,{'pointToLayer':function(feature,latlng) {
+             content = "<a href='http://www.openstreetmap.org/node/"+feature.id+"' target='_blank'>Node "+feature.id+"</a>"
+             return L.circleMarker(latlng, osmExitMarkerOptions).bindPopup(content);
+          }}).addTo(map);
+        });
       });
     </script>
   </body>
