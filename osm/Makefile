@@ -3,3 +3,7 @@ osm_exits.json:
 
 osm_exits.geojson: osm_exits.json
 	python osm_exits.py
+
+clean:
+	rm osm_exits.json
+	rm osm_exits.geojson
